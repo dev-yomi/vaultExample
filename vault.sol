@@ -26,6 +26,7 @@ contract StakedETHVault {
     }
 
     function deposit(uint256 amount, address _assetToDeposit) external {
+        require(_assetToDeposit != address(0), "Asset address cannot be zero");
         IERC20 assetToDeposit = IERC20(_assetToDeposit);
         require(assetToDeposit.transferFrom(msg.sender, address(this), amount), "Transfer failed");
         tokenDeposits[_assetToDeposit] += amount;
@@ -34,6 +35,7 @@ contract StakedETHVault {
     }
 
     function withdrawToOwner(uint256 amount, address _assetToWithdraw) external onlyOwner {
+        require(_assetToWithdraw != address(0), "Asset address cannot be zero");
         IERC20 assetToWithdraw = IERC20(_assetToWithdraw);
         require(assetToWithdraw.transfer(owner, amount), "Transfer failed");
         tokenDeposits[_assetToWithdraw] -= amount;
