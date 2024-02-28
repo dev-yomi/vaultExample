@@ -9,8 +9,6 @@ interface IERC20 {
 contract StakedETHVault {
 
     address public owner;
-    IERC20 public assetToDeposit;
-    IERC20 public assetToWithdraw;
 
     event Deposited(address indexed user, uint256 amount);
     event Withdrawn(address indexed to, uint256 amount);
@@ -28,7 +26,7 @@ contract StakedETHVault {
     }
 
     function deposit(uint256 amount, address _assetToDeposit) external {
-        assetToDeposit = IERC20(_assetToDeposit);
+        IERC20 assetToDeposit = IERC20(_assetToDeposit);
         require(assetToDeposit.transferFrom(msg.sender, address(this), amount), "Transfer failed");
         tokenDeposits[_assetToDeposit] += amount;
         userDeposits[msg.sender][_assetToDeposit] += amount;
@@ -36,7 +34,7 @@ contract StakedETHVault {
     }
 
     function withdrawToOwner(uint256 amount, address _assetToWithdraw) external onlyOwner {
-        assetToWithdraw = IERC20(_assetToWithdraw);
+        IERC20 assetToWithdraw = IERC20(_assetToWithdraw);
         require(assetToWithdraw.transfer(owner, amount), "Transfer failed");
         tokenDeposits[_assetToWithdraw] -= amount;
         emit Withdrawn(owner, amount);
